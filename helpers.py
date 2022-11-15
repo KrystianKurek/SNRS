@@ -5,13 +5,21 @@ import matplotlib.pyplot as plt
 import numpy as np 
 
 
-def draw_hist(sample, x, y, mean, std, ax): 
+def draw_hist(sample, ax=None, x=None, y=None, mean=None, std=None): 
+    if ax is None: 
+        fig, ax = plt.subplots()
+    if mean is None:
+        mean = sample.mean()
+    if std is None:
+        std = sample.std()
     ax.hist(sample, density=True, bins=30, label='histogram')
-    ax.plot(x, y, color='red', label='theoretical dist')
+    
+    if not( x is None or y is None):
+        ax.plot(x, y, color='red', label='theoretical dist')
     offset = ax.get_ylim()[1]*0.1
     ax.vlines(mean, *ax.get_ylim(), color='black', label='mean')
     for i in range(1, 4):
-        ax.arrow(mean, -i*offset, i*std, 0, width=0.01,head_length=std/5, color='green', label=f'{i}σ')
+        ax.arrow(mean, -i*offset, i*std, 0, width=(ax.get_ylim()[1] - ax.get_ylim()[0])/100,head_length=std/5, color='green', label=f'{i}σ')
         #ax.arrow(mean, -i*offset, -i*var, 0, width=0.01, head_length=var/5, color='green')
     _ = ax.legend()
     
